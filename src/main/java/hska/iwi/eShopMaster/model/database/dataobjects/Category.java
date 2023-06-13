@@ -1,13 +1,6 @@
 package hska.iwi.eShopMaster.model.database.dataobjects;
 
-
-import java.util.HashSet;
-import java.util.Set;
-import javax.persistence.*;
-
-public class Category {
-
-	private int id;
+public class Category {	private int id;
 	private String name;
 
 	public Category() {
