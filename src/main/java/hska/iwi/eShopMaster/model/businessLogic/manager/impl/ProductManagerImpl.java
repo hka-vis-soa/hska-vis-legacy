@@ -12,7 +12,6 @@ import hska.iwi.eShopMaster.model.webclient.HttpMethod;
 import hska.iwi.eShopMaster.model.webclient.RequestClient;
 import hska.iwi.eShopMaster.model.webclient.Response;
 import hska.iwi.eShopMaster.model.webclient.URL;
-import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,17 +43,17 @@ public class ProductManagerImpl implements ProductManager {
         boolean maxPriceParam = maxPrice != null;
         if (detailsParam || minPriceParam || maxPriceParam) {
             urlBuilder.append(URL.QUESTIONMARK);
-            if(detailsParam) {
+            if (detailsParam) {
                 urlBuilder.append(URL.DETAILS).append(details);
             }
-            if(minPriceParam) {
-                if(detailsParam) {
+            if (minPriceParam) {
+                if (detailsParam) {
                     urlBuilder.append(URL.AND);
                 }
                 urlBuilder.append(URL.MINPRICE).append(minPrice);
             }
-            if(maxPriceParam) {
-                if(detailsParam || minPriceParam) {
+            if (maxPriceParam) {
+                if (detailsParam || minPriceParam) {
                     urlBuilder.append(URL.AND);
                 }
                 urlBuilder.append(URL.MAXPRICE).append(maxPrice);
@@ -68,10 +67,11 @@ public class ProductManagerImpl implements ProductManager {
 
     private List<Product> getProductsResponse(Response response) {
         List<Product> products = new ArrayList<Product>();
-        if(response.getStatusCode() == 200) {
+        if (response.getStatusCode() == 200) {
             try {
-                List<ProductDTO> productDTOs = objectMapper.readValue(response.getBody(), new TypeReference<List<ProductDTO>>() {});
-                for(ProductDTO productDTO : productDTOs) {
+                List<ProductDTO> productDTOs = objectMapper.readValue(response.getBody(), new TypeReference<List<ProductDTO>>() {
+                });
+                for (ProductDTO productDTO : productDTOs) {
                     products.add(ProductMapper.mapToProduct(productDTO, categoryManager.getCategory(productDTO.getCategory_id())));
                 }
             } catch (JsonProcessingException e) {
@@ -85,7 +85,7 @@ public class ProductManagerImpl implements ProductManager {
         String targetURL = URL.DOCKER_HOST + URL.PRODUCTS + URL.SLASH + id;
         Response response = requestClient.execute(HttpMethod.GET, targetURL, null);
         Product product = null;
-        if(response.getStatusCode() == 200) {
+        if (response.getStatusCode() == 200) {
             try {
                 ProductDTO productDTO = objectMapper.readValue(response.getBody(), ProductDTO.class);
                 product = ProductMapper.mapToProduct(productDTO, categoryManager.getCategory(productDTO.getCategory_id()));
@@ -104,15 +104,16 @@ public class ProductManagerImpl implements ProductManager {
             body = objectMapper.writeValueAsString(new ProductDTO(name, price, details, categoryId));
             String targetURL = URL.DOCKER_HOST + URL.PRODUCTS;
             Response response = requestClient.execute(HttpMethod.POST, targetURL, body);
-            if(response.getStatusCode() == 200) {
+            if (response.getStatusCode() == 200) {
                 ProductDTO productDTO = objectMapper.readValue(response.getBody(), ProductDTO.class);
                 id = productDTO.getId();
             }
-        } catch(JsonProcessingException e) {
+        } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
         return id;
     }
+
     public void deleteProductById(int id) {
         String targetURL = URL.DOCKER_HOST + URL.PRODUCTS + URL.SLASH + id;
         requestClient.execute(HttpMethod.DELETE, targetURL, null);
@@ -122,6 +123,7 @@ public class ProductManagerImpl implements ProductManager {
     public Product getProductByName(String name) {
         throw new UnsupportedOperationException("getProductByName#unsupported");
     }
+
     public boolean deleteProductsByCategoryId(int categoryId) {
         throw new UnsupportedOperationException("getProductByName#unsupported");
     }
