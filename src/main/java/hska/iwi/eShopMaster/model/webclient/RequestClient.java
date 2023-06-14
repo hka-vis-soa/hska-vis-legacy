@@ -12,7 +12,7 @@ public class RequestClient {
      * Execute a http request for a given http method against the target url
      * @param method HttpMethod.GET | HttpMethod.POST | HttpMethod.DELETE
      * @param targetURL the url you want to send the request to
-     * @param body form: {'key1': 'value1', 'key2': 'value2'}
+     * @param body form: {"key1": "value1", "key2": "value2"}
      * @return the request body for a successful request or null
      */
     public Response execute(HttpMethod method, String targetURL, String body) {
@@ -28,7 +28,7 @@ public class RequestClient {
             connection.setUseCaches(false);
             if(method == HttpMethod.POST) {
                 connection.setDoOutput(true);
-                sendRequest(connection, body);
+                appendBodyToRequest(connection, body);
             }
             return receiveRequest(connection);
         } catch (ProtocolException e) {
@@ -44,7 +44,7 @@ public class RequestClient {
         }
     }
 
-    private void sendRequest(HttpURLConnection connection, String body) throws IOException {
+    private void appendBodyToRequest(HttpURLConnection connection, String body) throws IOException {
         DataOutputStream wr = new DataOutputStream (connection.getOutputStream());
         wr.writeBytes(body);
         wr.close();

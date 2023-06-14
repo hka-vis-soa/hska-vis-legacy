@@ -25,7 +25,7 @@ public class CategoryManagerImpl implements CategoryManager {
     }
 
     public List<Category> getCategories() {
-        String targetURL = URL.DOCKER_HOST + URL.CATEGORIES;
+        String targetURL = URL.HOST + URL.CATEGORIES;
         Response response = requestClient.execute(HttpMethod.GET, targetURL, null);
         List<Category> categories = Collections.emptyList();
         if(response.getStatusCode() == 200) {
@@ -39,7 +39,7 @@ public class CategoryManagerImpl implements CategoryManager {
     }
 
     public Category getCategory(int id) {
-        String targetURL = URL.DOCKER_HOST + URL.CATEGORIES + URL.SLASH + id;
+        String targetURL = URL.HOST + URL.CATEGORIES + URL.SLASH + id;
         Response response = requestClient.execute(HttpMethod.GET, targetURL, null);
         Category category = null;
         if(response.getStatusCode() == 200) {
@@ -59,12 +59,12 @@ public class CategoryManagerImpl implements CategoryManager {
         } catch(JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-        String targetURL = URL.DOCKER_HOST + URL.CATEGORIES;
+        String targetURL = URL.HOST + URL.CATEGORIES;
         requestClient.execute(HttpMethod.POST, targetURL, body);
     }
 
     public void delCategoryById(int id) {
-        String targetURL = URL.DOCKER_HOST + URL.CATEGORIES + URL.SLASH + id;
+        String targetURL = URL.HOST + URL.CATEGORIES + URL.SLASH + id;
         requestClient.execute(HttpMethod.DELETE, targetURL, null);
     }
 

@@ -30,14 +30,16 @@ public class ProductManagerImpl implements ProductManager {
     }
 
     public List<Product> getProducts() {
-        String targetURL = URL.DOCKER_HOST + URL.PRODUCTS;
+        String targetURL = URL.HOST + URL.PRODUCTS;
         Response response = requestClient.execute(HttpMethod.GET, targetURL, null);
         return getProductsResponse(response);
     }
 
     public List<Product> getProductsForSearchValues(String details,
                                                     Double minPrice, Double maxPrice) {
-        StringBuilder urlBuilder = new StringBuilder(URL.DOCKER_HOST + URL.PRODUCTS + URL.SEARCH);
+        StringBuilder urlBuilder = new StringBuilder(URL.HOST)
+                .append(URL.PRODUCTS)
+                .append(URL.SEARCH);
         boolean detailsParam = details != null && details.length() > 0;
         boolean minPriceParam = minPrice != null;
         boolean maxPriceParam = maxPrice != null;
@@ -60,7 +62,6 @@ public class ProductManagerImpl implements ProductManager {
             }
         }
         String targetURL = urlBuilder.toString();
-        System.out.println(targetURL);
         Response response = requestClient.execute(HttpMethod.GET, targetURL, null);
         return getProductsResponse(response);
     }
@@ -82,7 +83,7 @@ public class ProductManagerImpl implements ProductManager {
     }
 
     public Product getProductById(int id) {
-        String targetURL = URL.DOCKER_HOST + URL.PRODUCTS + URL.SLASH + id;
+        String targetURL = URL.HOST + URL.PRODUCTS + URL.SLASH + id;
         Response response = requestClient.execute(HttpMethod.GET, targetURL, null);
         Product product = null;
         if (response.getStatusCode() == 200) {
@@ -102,7 +103,7 @@ public class ProductManagerImpl implements ProductManager {
         int id = 0;
         try {
             body = objectMapper.writeValueAsString(new ProductDTO(name, price, details, categoryId));
-            String targetURL = URL.DOCKER_HOST + URL.PRODUCTS;
+            String targetURL = URL.HOST + URL.PRODUCTS;
             Response response = requestClient.execute(HttpMethod.POST, targetURL, body);
             if (response.getStatusCode() == 200) {
                 ProductDTO productDTO = objectMapper.readValue(response.getBody(), ProductDTO.class);
@@ -115,7 +116,7 @@ public class ProductManagerImpl implements ProductManager {
     }
 
     public void deleteProductById(int id) {
-        String targetURL = URL.DOCKER_HOST + URL.PRODUCTS + URL.SLASH + id;
+        String targetURL = URL.HOST + URL.PRODUCTS + URL.SLASH + id;
         requestClient.execute(HttpMethod.DELETE, targetURL, null);
     }
 
